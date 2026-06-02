@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Web Audit X</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="/frontend/src/technical-insight/ui/style.css" />
+</head>
+<body>
+
+<!-- Toast notification -->
+<div class="toast" id="toast"></div>
+
+<div class="app">
+
+  <!-- ════════════════════════════════════════
+       SIDEBAR
+       ════════════════════════════════════════ -->
+  <aside class="sidebar">
+
+    <div class="logo">
+      <div class="logo-icon">🔍</div>
+      <div class="logo-text">Web <span>Audit</span> X</div>
+    </div>
+
+    <nav>
+      <div class="nav-label">Pages</div>
+      <button class="nav-btn active" data-page="audit"><span>🚀</span> Run Audit</button>
+      <button class="nav-btn" data-page="ai"><span>🤖</span> AI Report</button>
+      <button class="nav-btn" data-page="history"><span>📋</span> Audit History</button>
+      <button class="nav-btn" data-page="health"><span>💚</span> Server Health</button>
+      <button class="nav-btn" data-page="raw"><span>{ }</span> Raw JSON</button>
+    </nav>
+
+    <div class="how-box">
+      <div class="nav-label" style="margin-bottom:8px">How it works</div>
+      1️⃣ Tries <span style="color:var(--accent)">API audit</span> first<br>
+      2️⃣ APIs fail? Auto falls back to <span style="color:var(--yellow)">formula scoring</span><br>
+      3️⃣ Both save to <span style="color:var(--green)">one collection</span><br>
+      <span style="color:var(--muted);font-size:11px;margin-top:4px;display:block">
+        Collection: <span style="font-family:var(--mono)">audit_results</span>
+      </span>
+    </div>
+
+    <div>
+      <div class="nav-label" style="margin-bottom:6px">API Server</div>
+      <div class="status-box">
+        <div class="status-row">
+          <span class="status-label">Status</span>
+          <span id="srv-status"><span class="dot yellow"></span>Checking…</span>
+        </div>
+        <div class="status-row">
+          <span class="status-label">Database</span>
+          <span id="db-status">—</span>
+        </div>
+        <div class="status-row">
+          <span class="status-label">Collection</span>
+          <span style="color:var(--green);font-family:var(--mono);font-size:11px">audit_results</span>
+        </div>
+        <div style="margin-top:8px">
+          <input
+            id="api-url-input"
+            class="url-input"
+            style="font-size:11px;padding:6px 10px"
+            value="http://localhost:5000"
+            placeholder="API Base URL"
+          />
+        </div>
+      </div>
+    </div>
+
+  </aside><!-- /sidebar -->
+
+  <!-- ════════════════════════════════════════
+       MAIN CONTENT
+       ════════════════════════════════════════ -->
+  <main class="main">
+
+    <!-- ──────────────────────────────────────
+         PAGE: RUN AUDIT
+         ────────────────────────────────────── -->
+    <div class="page active" id="page-audit">
+
+      <div style="margin-bottom:24px">
+        <div style="font-family:var(--mono);font-size:22px;font-weight:700;margin-bottom:6px">Website Audit</div>
+        <div style="color:var(--muted);font-size:13px;margin-bottom:18px">
+          Enter any URL — system tries API audit first, falls back to formula scoring automatically
+        </div>
+        <div class="input-row">
+          <input
+            class="url-input"
+            id="audit-url"
+            placeholder="https://example.com"
+            type="url"
+          />
+          <button class="btn-run" id="run-btn" onclick="runAudit()">▶ Run Audit</button>
+        </div>
+      </div>
+
+      <!-- Loading state -->
+      <div class="loading-box" id="loading">
+        <div class="spinner"></div>
+        <div class="loading-title">Auditing your website…</div>
+        <div class="loading-sub">Trying API audit first — auto fallback if APIs are unavailable</div>
+        <div id="steps" style="margin-top:12px">
+          <div class="step active-step" id="s1">⟳ Connecting to audit APIs…</div>
+          <div class="step" id="s2">⟳ Checking SEO, SSL, performance…</div>
+          <div class="step" id="s3">⟳ Analyzing DNS, robots, sitemap…</div>
+          <div class="step" id="s4">⟳ Saving to database…</div>
+        </div>
+      </div>
+
+      <!-- Error banner -->
+      <div class="error-banner" id="error-banner"></div>
+
+      <!-- Results -->
+      <div class="results" id="results">
+        <div id="mode-indicator"></div>
+        <div id="db-confirm-msg"></div>
+
+        <!-- Action bar -->
+        <div id="result-actions" style="display:none;gap:10px;margin-bottom:16px;flex-wrap:wrap">
+          <button
+            class="btn-run"
+            style="background:linear-gradient(135deg,#10b981,#059669);font-size:13px;padding:10px 20px"
+            onclick="downloadPDF()">
+            ⬇ Download PDF Report
+          </button>
+          <button
+            class="btn-run"
+            style="background:linear-gradient(135deg,#7c3aed,#6d28d9);font-size:13px;padding:10px 20px"
+            onclick="goToAIReport()">
+            🤖 Generate AI Report
+          </button>
+        </div>
+
+        <div class="audit-meta" id="audit-meta"></div>
+        <div id="overall-card"></div>
+        <div id="audit-sections"></div>
+      </div>
+
+    </div><!-- /page-audit -->
+
+
+    <!-- ──────────────────────────────────────
+         PAGE: AI REPORT
+         ────────────────────────────────────── -->
+    <div class="page" id="page-ai">
+
+      <div style="font-family:var(--mono);font-size:20px;font-weight:700;margin-bottom:4px">🤖 AI Report Generator</div>
+      <div style="color:var(--muted);font-size:13px;margin-bottom:24px">
+        AI reads all metrics from the database and writes a plain-English report with issues and fix suggestions
+      </div>
+
+      <!-- AI Config -->
+      <div class="ai-config-panel">
+        <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:16px">⚙️ AI Model Configuration</div>
+        <div class="config-grid">
+          <div>
+            <label>AI Provider</label>
+            <select id="ai-provider" class="url-input" onchange="updateModelList()">
+              <option value="openai">🟢 OpenAI (ChatGPT)</option>
+              <option value="gemini">🔵 Google Gemini</option>
+              <option value="deepseek">🟣 DeepSeek</option>
+              <option value="groq">🟠 Groq (Fast + Free tier)</option>
+              <option value="anthropic">🟡 Anthropic Claude</option>
+            </select>
+          </div>
+          <div>
+            <label>Model</label>
+            <select id="ai-model" class="url-input"></select>
+          </div>
+        </div>
+        <div style="margin-bottom:14px">
+          <label>
+            API Key
+            <span style="color:var(--green);text-transform:none;letter-spacing:0">(stored in browser only, never sent to our servers)</span>
+          </label>
+          <div class="key-row">
+            <input id="ai-apikey" class="url-input" type="password" placeholder="Paste your API key here…" />
+            <button class="btn-ghost" style="font-size:12px" onclick="toggleKeyVisibility()">👁 Show</button>
+          </div>
+        </div>
+        <div style="background:var(--surface2);border-radius:7px;padding:12px;font-size:12px;color:var(--muted);line-height:1.7">
+          <strong style="color:var(--text)">Where to get free API keys:</strong><br>
+          🟢 <strong>OpenAI:</strong> platform.openai.com → API Keys &nbsp;·&nbsp;
+          🔵 <strong>Gemini:</strong> aistudio.google.com/apikey &nbsp;·&nbsp;
+          🟣 <strong>DeepSeek:</strong> platform.deepseek.com &nbsp;·&nbsp;
+          🟠 <strong>Groq:</strong> console.groq.com (free!) &nbsp;·&nbsp;
+          🟡 <strong>Anthropic:</strong> console.anthropic.com
+        </div>
+      </div>
+
+      <!-- Audit selector -->
+      <div class="ai-config-panel">
+        <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:12px">📋 Select Audit to Analyze</div>
+        <div style="display:flex;gap:10px;margin-bottom:10px">
+          <input
+            id="ai-audit-id"
+            class="url-input"
+            placeholder="Audit ID (auto-filled after running audit)"
+            style="flex:1;font-size:12px"
+          />
+          <button class="btn-ghost" style="font-size:12px;white-space:nowrap" onclick="generateAIReport()">🚀 Generate Report</button>
+        </div>
+        <div id="ai-audit-hint" style="font-size:11px;color:var(--muted)">
+          Run an audit first, then come back here — the Audit ID fills in automatically.
+        </div>
+      </div>
+
+      <!-- AI Loading -->
+      <div id="ai-loading" style="display:none;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:36px;text-align:center;margin-bottom:20px">
+        <div class="spinner"></div>
+        <div style="font-size:15px;font-weight:700;margin-bottom:6px">AI is reading your audit data…</div>
+        <div style="color:var(--muted);font-size:13px" id="ai-loading-msg">Fetching metrics from database and sending to AI model…</div>
+      </div>
+
+      <!-- AI Error -->
+      <div class="error-banner" id="ai-error"></div>
+
+      <!-- AI Report output -->
+      <div id="ai-report-wrap" style="display:none">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px">
+          <div>
+            <div style="font-size:18px;font-weight:700">AI Analysis Report</div>
+            <div id="ai-report-meta" style="font-size:12px;color:var(--muted);margin-top:3px"></div>
+          </div>
+          <div style="display:flex;gap:8px">
+            <button class="btn-ghost" style="font-size:12px" onclick="copyAIReport()">📋 Copy</button>
+            <button class="btn-run" style="font-size:13px;padding:10px 18px" onclick="downloadAIReportPDF()">⬇ Download PDF</button>
+          </div>
+        </div>
+        <div id="ai-report-content" style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:28px;line-height:1.8;font-size:14px"></div>
+      </div>
+
+    </div><!-- /page-ai -->
+
+
+    <!-- ──────────────────────────────────────
+         PAGE: HISTORY
+         ────────────────────────────────────── -->
+    <div class="page" id="page-history">
+      <div style="font-family:var(--mono);font-size:20px;font-weight:700;margin-bottom:6px">Audit History</div>
+      <div style="color:var(--muted);font-size:13px;margin-bottom:18px">All audits — both API and formula-based in one collection</div>
+      <div class="input-row" style="margin-bottom:20px">
+        <input class="url-input" id="history-domain" placeholder="example.com" />
+        <button class="btn-ghost" onclick="loadHistory()">Load History</button>
+      </div>
+      <div id="history-content"></div>
+    </div><!-- /page-history -->
+
+
+    <!-- ──────────────────────────────────────
+         PAGE: SERVER HEALTH
+         ────────────────────────────────────── -->
+    <div class="page" id="page-health">
+      <div style="font-family:var(--mono);font-size:20px;font-weight:700;margin-bottom:6px">Server Health</div>
+      <div style="color:var(--muted);font-size:13px;margin-bottom:18px">Live backend status</div>
+      <button class="btn-ghost" onclick="loadHealth()" style="margin-bottom:20px">↻ Refresh</button>
+      <div id="health-content"></div>
+    </div><!-- /page-health -->
+
+
+    <!-- ──────────────────────────────────────
+         PAGE: RAW JSON
+         ────────────────────────────────────── -->
+    <div class="page" id="page-raw">
+      <div style="font-family:var(--mono);font-size:20px;font-weight:700;margin-bottom:6px">Raw JSON</div>
+      <div style="color:var(--muted);font-size:13px;margin-bottom:14px">Full response from last audit</div>
+      <button class="btn-ghost" onclick="copyJSON()" style="margin-bottom:14px">📋 Copy JSON</button>
+      <div class="json-box" id="raw-json">Run an audit first.</div>
+    </div><!-- /page-raw -->
+
+  </main><!-- /main -->
+
+</div><!-- /app -->
+
+<script src="/frontend/src/technical-insight/ui/app.js"></script>
+</body>
+</html>

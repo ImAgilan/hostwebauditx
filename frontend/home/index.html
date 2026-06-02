@@ -1,0 +1,2021 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WebAudit X — AI-Powered Web Intelligence</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;600;700;800&family=IBM+Plex+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f8fafc;
+  --surface: #ffffff;
+  --surface2: #f1f5f9;
+  --border: rgba(0,0,0,0.08);
+  --accent: #00b894;
+  --accent2: #3b82f6;
+  --accent3: #f59e0b;
+  --warn: #ef4444;
+  --text: #0f172a;
+  --muted: #64748b;
+  --glow: rgba(0,184,148,0.12);
+}
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    overflow-x: hidden;
+    cursor: ;
+  }
+body {
+  font-family: 'Inter', sans-serif;
+}
+
+.hero-title, .section-title, .cta-title,
+.nav-logo, h3, h4, .price-amount,
+.stat-num, .dash-topbar-title {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.section-tag, .hero-tag, .score-label,
+.footer-copy, .url-prefix, .logo-badge {
+  font-family: 'IBM Plex Mono', monospace;
+}
+  /* CUSTOM CURSOR */
+  .cursor {
+    width: 10px; height: 10px;
+    background: var(--accent);
+    border-radius: 50%;
+    position: fixed; top: 0; left: 0;
+    pointer-events: none; z-index: 9999;
+    transition: transform 0.1s;
+    mix-blend-mode: difference;
+  }
+  .cursor-ring {
+    width: 34px; height: 34px;
+    border: 1.5px solid var(--accent);
+    border-radius: 50%;
+    position: fixed; top: 0; left: 0;
+    pointer-events: none; z-index: 9998;
+    transition: transform 0.25s ease, width 0.2s, height 0.2s;
+    opacity: 0.6;
+  }
+
+  /* NOISE OVERLAY */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none; z-index: 1000; opacity: 0.4;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 900;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 48px;
+    height: 68px;
+    background: rgb(255, 255, 255);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-logo {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 1.35rem;
+    color: var(--text);
+    text-decoration: none;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .logo-badge {
+    background: var(--accent);
+    color: var(--bg);
+    font-size: 0.6rem;
+    font-family: 'Space Mono', monospace;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 3px;
+    letter-spacing: 1px;
+  }
+  .nav-links {
+    display: flex; align-items: center; gap: 36px;
+    list-style: none;
+  }
+  .nav-links a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.875rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--text); }
+  .nav-cta {
+    display: flex; align-items: center; gap: 12px;
+  }
+  .btn-ghost {
+    color: var(--muted);
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-decoration: none;
+    padding: 8px 18px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    transition: all 0.2s;
+    cursor: ;
+  }
+  .btn-ghost:hover { color: var(--text); border-color: rgba(0,230,180,0.3); }
+  .btn-primary {
+    background: var(--accent);
+    color: var(--bg);
+    font-size: 0.875rem;
+    font-weight: 700;
+    font-family: 'Syne', sans-serif;
+    text-decoration: none;
+    padding: 9px 22px;
+    border-radius: 6px;
+    transition: all 0.2s;
+    cursor: ;
+    box-shadow: 0 0 20px rgba(0,230,180,0.25);
+  }
+  .btn-primary:hover {
+    box-shadow: 0 0 30px rgba(0,230,180,0.45);
+    transform: translateY(-1px);
+  }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    position: relative;
+    padding: 120px 48px 80px;
+    text-align: center;
+    overflow: hidden;
+  }
+
+  .hero-grid {
+    position: absolute; inset: 0;
+    background-image:
+       linear-gradient(rgba(0,0,0,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,0,0,0.04) 1px, transparent 1px);
+    background-size: 60px 60px;
+    mask-image: radial-gradient(ellipse 80% 60% at 50% 50%, black 40%, transparent 100%);
+  }
+
+  .hero-orb1 {
+    position: absolute;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(0,230,180,0.12) 0%, transparent 70%);
+    top: -100px; left: -100px;
+    pointer-events: none;
+    animation: drift1 8s ease-in-out infinite;
+  }
+  .hero-orb2 {
+    position: absolute;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(59,130,246,0.1) 0%, transparent 70%);
+    bottom: -80px; right: -80px;
+    pointer-events: none;
+    animation: drift2 10s ease-in-out infinite;
+  }
+  @keyframes drift1 {
+    0%, 100% { transform: translate(0,0); }
+    50% { transform: translate(40px, 30px); }
+  }
+  @keyframes drift2 {
+    0%, 100% { transform: translate(0,0); }
+    50% { transform: translate(-30px, -40px); }
+  }
+
+  .hero-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--accent);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    background: rgba(0,230,180,0.08);
+    border: 1px solid rgba(0,230,180,0.2);
+    padding: 6px 16px;
+    border-radius: 100px;
+    display: inline-block;
+    margin-bottom: 28px;
+    animation: fadeUp 0.6s ease both;
+  }
+  .hero-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: clamp(3rem, 7vw, 5.5rem);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    margin-bottom: 24px;
+    animation: fadeUp 0.7s 0.1s ease both;
+    max-width: 1800px;
+  }
+  .hero-title .accent-word {
+    color: var(--accent);
+    position: relative;
+    display: inline-block;
+  }
+  .hero-title .accent-word::after {
+    content: '';
+    position: absolute;
+    bottom: 4px; left: 0; right: 0;
+    height: 3px;
+    background: var(--accent);
+    opacity: 0.4;
+    border-radius: 2px;
+  }
+  .hero-sub {
+    font-size: 1.125rem;
+    color: var(--muted);
+    max-width: 860px;
+    line-height: 1.7;
+    margin-bottom: 44px;
+    font-weight: 300;
+    animation: fadeUp 0.7s 0.2s ease both;
+  }
+  .hero-actions {
+    display: flex; align-items: center; gap: 16px;
+    margin-bottom: 80px;
+    animation: fadeUp 0.7s 0.3s ease both;
+  }
+  .btn-hero {
+    background: var(--accent);
+    color: var(--bg);
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    padding: 14px 34px;
+    border-radius: 8px;
+    text-decoration: none;
+    box-shadow: 0 0 40px rgba(0,230,180,0.3), 0 4px 20px rgba(0,0,0,0.3);
+    transition: all 0.25s;
+    cursor: ;
+  }
+  .btn-hero:hover {
+    box-shadow: 0 0 60px rgba(0,230,180,0.5), 0 4px 20px rgba(0,0,0,0.3);
+    transform: translateY(-2px);
+  }
+  .btn-hero-outline {
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    font-weight: 600;
+    font-size: 1rem;
+    padding: 14px 34px;
+    border-radius: 8px;
+    text-decoration: none;
+    border: 1.5px solid rgba(255,255,255,0.12);
+    transition: all 0.25s;
+    cursor: ;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .btn-hero-outline:hover { border-color: rgba(255,255,255,0.3); background: rgba(255,255,255,0.04); }
+  .btn-hero-outline .play-icon {
+    width: 22px; height: 22px;
+    background: var(--accent2);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.55rem;
+  }
+
+  .hero-stats {
+    display: flex; gap: 48px;
+    animation: fadeUp 0.7s 0.4s ease both;
+  }
+  .stat-item { text-align: left; }
+  .stat-num {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 2rem;
+    color: var(--text);
+    line-height: 1;
+  }
+  .stat-num span { color: var(--accent); }
+  .stat-label {
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin-top: 4px;
+    letter-spacing: 0.03em;
+  }
+  .stat-divider {
+    width: 1px;
+    background: var(--border);
+    align-self: stretch;
+  }
+
+  /* URL INPUT BAR */
+  .url-bar-wrapper {
+    width: 100%;
+    max-width: 700px;
+    margin: 0 auto 80px;
+    animation: fadeUp 0.7s 0.35s ease both;
+    position: relative;
+  }
+  .url-bar {
+    display: flex;
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    padding: 6px 6px 6px 20px;
+    gap: 8px;
+    align-items: center;
+    box-shadow: 0 0 40px rgba(0,230,180,0.06), 0 8px 40px rgba(0,0,0,0.4);
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .url-bar:focus-within {
+    border-color: rgba(0,230,180,0.4);
+    box-shadow: 0 0 0 4px rgba(0,230,180,0.08), 0 8px 40px rgba(0,0,0,0.4);
+  }
+  .url-prefix {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.8rem;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+  .url-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 400;
+  }
+  .url-input::placeholder { color: var(--muted); }
+  .url-submit {
+    background: var(--accent);
+    color: var(--bg);
+    border: none;
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 0.9rem;
+    padding: 12px 28px;
+    border-radius: 8px;
+    cursor: ;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .url-submit:hover { box-shadow: 0 0 20px rgba(0,230,180,0.4); }
+
+  /* SECTION COMMONS */
+  section { position: relative; }
+  .section-inner { max-width: 1400px; margin: 0 auto; padding: 0 48px; }
+  .section-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--accent);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .section-tag::before {
+    content: ''; width: 24px; height: 1.5px; background: var(--accent);
+  }
+  .section-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: clamp(2rem, 4vw, 2.8rem);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-bottom: 20px;
+  }
+  .section-sub {
+    color: var(--muted);
+    font-size: 1.05rem;
+    line-height: 1.7;
+    font-weight: 300;
+    max-width: 540px;
+  }
+
+  /* MARQUEE LOGOS */
+  .logos-section {
+    padding: 48px 0;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    overflow: hidden;
+  }
+  .logos-label {
+    text-align: center;
+    font-size: 0.78rem;
+    color: var(--muted);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-family: 'Space Mono', monospace;
+    margin-bottom: 28px;
+  }
+  .marquee-track {
+    display: flex; gap: 60px;
+    animation: marquee 20s linear infinite;
+    width: max-content;
+  }
+  .marquee-track2 {
+    display: flex; gap: 60px;
+    animation: marquee 20s linear infinite;
+    width: max-content;
+    animation-delay: -10s;
+  }
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+  .marquee-wrapper {
+    display: flex; gap: 60px; overflow: hidden;
+    mask-image: linear-gradient(90deg, transparent, black 10%, black 90%, transparent);
+  }
+  .logo-chip {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: var(--muted);
+    white-space: nowrap;
+    opacity: 0.5;
+    letter-spacing: 0.05em;
+    transition: opacity 0.3s;
+  }
+
+  /* FEATURES */
+  .features-section { padding: 120px 0; }
+  .features-header {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 48px; align-items: end;
+    margin-bottom: 72px;
+  }
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+  .feature-card {
+    background: var(--surface);
+    padding: 36px 32px;
+    position: relative;
+    overflow: hidden;
+    transition: background 0.3s;
+    cursor: ;
+  }
+  .feature-card:hover { background: var(--surface2); }
+  .feature-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .feature-card:hover::before { opacity: 1; }
+  .feature-icon {
+    width: 44px; height: 44px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.3rem;
+    margin-bottom: 20px;
+  }
+  .feature-card h3 {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 1.05rem;
+    margin-bottom: 10px;
+  }
+  .feature-card p {
+    font-size: 0.875rem;
+    color: var(--muted);
+    line-height: 1.65;
+    font-weight: 300;
+  }
+  .feature-card .feature-count {
+    position: absolute;
+    bottom: 24px; right: 28px;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    color: rgba(0,230,180,0.3);
+  }
+
+  /* DASHBOARD PREVIEW */
+  .dashboard-section { padding: 120px 0; background: var(--surface); }
+  .dash-layout {
+    display: grid; grid-template-columns: 260px 1fr;
+    gap: 0;
+    background: #080d18;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 40px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(0,230,180,0.05);
+    margin-top: 60px;
+    min-height: 580px;
+  }
+  .dash-sidebar {
+    background: #060b14;
+    border-right: 1px solid var(--border);
+    padding: 28px 0;
+  }
+  .dash-logo {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 1.1rem;
+    padding: 0 24px 24px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 20px;
+    display: flex; align-items: center; gap: 8px;
+    color: var(--text);
+  }
+  .dash-nav-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 10px 24px;
+    font-size: 0.83rem;
+    color: var(--muted);
+    cursor: ;
+    transition: all 0.15s;
+    border-left: 2px solid transparent;
+    font-weight: 400;
+    letter-spacing: 0.01em;
+  }
+  .dash-nav-item:hover { color: var(--text); background: rgba(255,255,255,0.03); }
+  .dash-nav-item.active {
+    color: var(--accent);
+    background: rgba(0,230,180,0.06);
+    border-left-color: var(--accent);
+  }
+  .dash-nav-icon { font-size: 1rem; width: 18px; text-align: center; }
+  .dash-nav-section {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    color: rgba(107,122,153,0.5);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 20px 24px 8px;
+  }
+  .dash-main { padding: 28px 32px; overflow: hidden; }
+  .dash-topbar {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 28px;
+  }
+  .dash-topbar-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 1.2rem;
+  }
+  .dash-topbar-right {
+    display: flex; gap: 10px; align-items: center;
+  }
+  .dash-btn-sm {
+    background: var(--accent);
+    color: var(--bg);
+    font-size: 0.75rem;
+    font-weight: 700;
+    font-family: 'Syne', sans-serif;
+    padding: 7px 16px;
+    border-radius: 6px;
+    cursor: ;
+  }
+  .dash-scores {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 16px; margin-bottom: 24px;
+  }
+  .score-card {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px 20px;
+  }
+  .score-label {
+    font-size: 0.72rem;
+    color: var(--muted);
+    margin-bottom: 10px;
+    font-family: 'Space Mono', monospace;
+    letter-spacing: 0.05em;
+  }
+  .score-value {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 1.8rem;
+    line-height: 1;
+  }
+  .score-bar {
+    height: 3px;
+    border-radius: 2px;
+    background: var(--border);
+    margin-top: 10px;
+    overflow: hidden;
+  }
+  .score-bar-fill {
+    height: 100%;
+    border-radius: 2px;
+    transition: width 1s ease;
+  }
+  .score-trend {
+    font-size: 0.7rem;
+    margin-top: 6px;
+    font-weight: 500;
+  }
+  .up { color: #22c55e; }
+  .down { color: var(--warn); }
+  .neutral { color: var(--muted); }
+
+  .dash-bottom {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .dash-panel {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+  }
+  .panel-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 0.85rem;
+    margin-bottom: 16px;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .panel-badge {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    background: rgba(0,230,180,0.1);
+    color: var(--accent);
+    padding: 2px 8px;
+    border-radius: 4px;
+  }
+  .issue-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    font-size: 0.78rem;
+  }
+  .issue-item:last-child { border-bottom: none; }
+  .issue-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .issue-text { flex: 1; color: var(--muted); }
+  .issue-level {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.62rem;
+    padding: 2px 7px;
+    border-radius: 3px;
+  }
+
+  /* MINI BAR CHART */
+  .bar-chart {
+    display: flex; align-items: flex-end;
+    gap: 6px; height: 80px;
+    padding-top: 12px;
+  }
+  .bar-col { flex: 1; display: flex; flex-direction: column; gap: 4px; align-items: center; }
+  .bar-fill {
+    border-radius: 3px 3px 0 0;
+    width: 100%;
+    background: linear-gradient(180deg, var(--accent2), rgba(59,130,246,0.3));
+    transition: height 0.8s ease;
+  }
+  .bar-fill.accent { background: linear-gradient(180deg, var(--accent), rgba(0,230,180,0.3)); }
+  .bar-label { font-size: 0.58rem; color: var(--muted); font-family: 'Space Mono', monospace; }
+
+  /* HOW IT WORKS */
+  .how-section { padding: 120px 0; }
+  .steps-wrapper {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    margin-top: 64px;
+    position: relative;
+  }
+  .steps-wrapper::before {
+    content: '';
+    position: absolute;
+    top: 38px; left: 12.5%; right: 12.5%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    opacity: 0.3;
+  }
+  .step-item { text-align: center; padding: 0 20px; }
+  .step-num {
+    width: 76px; height: 76px;
+    border-radius: 50%;
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 24px;
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 1.5rem;
+    color: var(--accent);
+    position: relative;
+    z-index: 1;
+  }
+  .step-item h3 {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    margin-bottom: 10px;
+  }
+  .step-item p {
+    font-size: 0.85rem;
+    color: var(--muted);
+    line-height: 1.65;
+    font-weight: 300;
+  }
+
+  /* AI SECTION */
+  .ai-section {
+    padding: 120px 0;
+    background: linear-gradient(135deg, rgba(0,230,180,0.03) 0%, var(--bg) 50%, rgba(59,130,246,0.03) 100%);
+  }
+  .ai-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 80px; align-items: center;
+    margin-top: 60px;
+  }
+  .ai-visual {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px;
+    position: relative;
+    overflow: hidden;
+  }
+  .ai-visual::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, rgba(0,230,180,0.04), transparent);
+    pointer-events: none;
+  }
+  .chat-msg {
+    display: flex; gap: 12px;
+    margin-bottom: 16px;
+  }
+  .chat-avatar {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.85rem;
+    font-weight: 700;
+    font-family: 'Syne', sans-serif;
+  }
+  .chat-avatar.ai { background: var(--accent); color: var(--bg); }
+  .chat-avatar.user { background: var(--surface2); color: var(--muted); border: 1px solid var(--border); }
+  .chat-bubble {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 0 12px 12px 12px;
+    padding: 12px 16px;
+    font-size: 0.83rem;
+    line-height: 1.6;
+    color: var(--muted);
+    max-width: 340px;
+  }
+  .chat-bubble.ai-bubble {
+    background: rgba(0,230,180,0.06);
+    border-color: rgba(0,230,180,0.15);
+    color: var(--text);
+    border-radius: 12px 12px 12px 0;
+  }
+  .chat-bubble .highlight { color: var(--accent); font-weight: 500; }
+  .typing-indicator {
+    display: flex; gap: 4px; align-items: center;
+    padding: 4px 0;
+  }
+  .typing-dot {
+    width: 6px; height: 6px;
+    background: var(--accent);
+    border-radius: 50%;
+    animation: typingBounce 1.2s ease infinite;
+  }
+  .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+  .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes typingBounce {
+    0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+    30% { transform: translateY(-4px); opacity: 1; }
+  }
+  .ai-features-list { list-style: none; }
+  .ai-features-list li {
+    display: flex; align-items: flex-start; gap: 14px;
+    padding: 18px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .ai-features-list li:last-child { border-bottom: none; }
+  .ai-icon {
+    width: 36px; height: 36px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1rem;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .ai-feature-text h4 {
+    font-family: 'Syne', sans-serif;
+    font-weight: 600;
+    font-size: 0.92rem;
+    margin-bottom: 4px;
+  }
+  .ai-feature-text p {
+    font-size: 0.82rem;
+    color: var(--muted);
+    line-height: 1.5;
+    font-weight: 300;
+  }
+
+  /* PRICING */
+  .pricing-section { padding: 120px 0; background: var(--surface); }
+  .pricing-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 24px; margin-top: 64px;
+  }
+  .price-card {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 40px 36px;
+    position: relative;
+    transition: transform 0.3s, box-shadow 0.3s;
+    cursor: ;
+  }
+  .price-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+  }
+  .price-card.popular {
+    border-color: rgba(0,230,180,0.4);
+    box-shadow: 0 0 40px rgba(0,230,180,0.08);
+  }
+  .popular-badge {
+    position: absolute;
+    top: -13px; left: 50%; transform: translateX(-50%);
+    background: var(--accent);
+    color: var(--bg);
+    font-family: 'Space Mono', monospace;
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    padding: 4px 16px;
+    border-radius: 100px;
+    white-space: nowrap;
+  }
+  .price-plan {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+  .price-amount {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 3rem;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+  .price-amount sup {
+    font-size: 1.2rem;
+    font-weight: 600;
+    vertical-align: super;
+    color: var(--muted);
+  }
+  .price-period { font-size: 0.83rem; color: var(--muted); margin-bottom: 28px; }
+  .price-divider { height: 1px; background: var(--border); margin-bottom: 28px; }
+  .price-features { list-style: none; margin-bottom: 32px; }
+  .price-features li {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 0.875rem;
+    color: var(--muted);
+    padding: 7px 0;
+  }
+  .price-features li .check { color: var(--accent); font-weight: 700; }
+  .price-features li .x { color: rgba(107,122,153,0.4); }
+  .price-btn {
+    display: block; text-align: center;
+    padding: 13px;
+    border-radius: 8px;
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 0.9rem;
+    text-decoration: none;
+    transition: all 0.2s;
+    cursor: ;
+  }
+  .price-btn.outline {
+    border: 1.5px solid var(--border);
+    color: var(--text);
+  }
+  .price-btn.outline:hover { border-color: rgba(255,255,255,0.25); }
+  .price-btn.filled {
+    background: var(--accent);
+    color: var(--bg);
+    box-shadow: 0 0 20px rgba(0,230,180,0.3);
+  }
+  .price-btn.filled:hover { box-shadow: 0 0 30px rgba(0,230,180,0.5); }
+
+  /* TESTIMONIALS */
+  .testimonials-section { padding: 120px 0; }
+  .testimonials-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 24px; margin-top: 64px;
+  }
+  .testi-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 32px;
+    position: relative;
+    transition: all 0.3s;
+  }
+  .testi-card:hover { border-color: rgba(0,230,180,0.2); }
+  .testi-quote {
+    font-size: 2.5rem;
+    color: var(--accent);
+    line-height: 1;
+    margin-bottom: 16px;
+    font-family: 'Syne', sans-serif;
+    opacity: 0.4;
+  }
+  .testi-text {
+    font-size: 0.9rem;
+    color: var(--muted);
+    line-height: 1.7;
+    font-weight: 300;
+    margin-bottom: 24px;
+    font-style: italic;
+  }
+  .testi-author {
+    display: flex; align-items: center; gap: 12px;
+  }
+  .testi-avatar {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent2), var(--accent));
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: var(--bg);
+    flex-shrink: 0;
+  }
+  .testi-name {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 0.9rem;
+  }
+  .testi-role { font-size: 0.78rem; color: var(--muted); }
+  .testi-stars { color: var(--accent3); font-size: 0.75rem; margin-bottom: 12px; }
+
+  /* CTA SECTION */
+
+  
+  .cta-section {
+    padding: 120px 0;
+    background: var(--surface);
+    position: relative;
+    overflow: hidden;
+  }
+  .cta-section::before {
+    content: '';
+    position: absolute;
+    width: 800px; height: 800px;
+    background: radial-gradient(circle, rgba(0,230,180,0.06) 0%, transparent 70%);
+    top: 50%; left: 50%; transform: translate(-50%, -50%);
+    pointer-events: none;
+  }
+  .cta-inner {
+    text-align: center;
+    position: relative;
+    z-index: 1;
+  }
+  .cta-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: clamp(2.2rem, 5vw, 4rem);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-bottom: 20px;
+  }
+  .cta-sub {
+    color: var(--muted);
+    font-size: 1.05rem;
+    line-height: 1.7;
+    max-width: 500px;
+    margin: 0 auto 44px;
+  }
+  .cta-actions { display: flex; gap: 16px; justify-content: center; }
+
+  /* FOOTER */
+  footer {
+    padding: 64px 0 36px;
+    border-top: 1px solid var(--border);
+  }
+  .footer-inner {
+    display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 64px; margin-bottom: 56px;
+  }
+  .footer-brand p {
+    font-size: 0.875rem;
+    color: var(--muted);
+    line-height: 1.7;
+    font-weight: 300;
+    max-width: 280px;
+    margin-top: 16px;
+  }
+  .footer-col h4 {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 0.85rem;
+    margin-bottom: 20px;
+    letter-spacing: 0.05em;
+  }
+  .footer-col ul { list-style: none; }
+  .footer-col ul li { margin-bottom: 10px; }
+  .footer-col ul li a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.875rem;
+    font-weight: 300;
+    transition: color 0.2s;
+    cursor: ;
+  }
+  .footer-col ul li a:hover { color: var(--text); }
+  .footer-bottom {
+    display: flex; justify-content: space-between; align-items: center;
+    padding-top: 28px;
+    border-top: 1px solid var(--border);
+  }
+  .footer-copy {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--muted);
+  }
+  .footer-socials { display: flex; gap: 16px; }
+  .social-link {
+    width: 34px; height: 34px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.85rem;
+    transition: all 0.2s;
+    cursor: ;
+  }
+  .social-link:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* SCORE RING */
+  .score-ring-wrapper {
+    display: flex; justify-content: center;
+    margin-bottom: 28px;
+  }
+  .ring-svg { transform: rotate(-90deg); }
+  .ring-bg { fill: none; stroke: rgba(255,255,255,0.06); }
+  .ring-fill { fill: none; stroke-linecap: round; transition: stroke-dashoffset 1.5s ease; }
+  .ring-text {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    fill: var(--text);
+    dominant-baseline: middle;
+    text-anchor: middle;
+    transform: rotate(90deg);
+    transform-origin: 60px 60px;
+  }
+  .ring-sublabel {
+    fill: var(--muted);
+    font-size: 9px;
+    font-family: 'Space Mono', monospace;
+    dominant-baseline: middle;
+    text-anchor: middle;
+    transform: rotate(90deg);
+    transform-origin: 60px 60px;
+  }
+
+  /* MOBILE MENU TOGGLE */
+  .hamburger {
+    display: none;
+    flex-direction: column; gap: 5px;
+    cursor: ; padding: 4px;
+  }
+  .hamburger span {
+    width: 22px; height: 2px;
+    background: var(--text);
+    border-radius: 2px;
+    transition: all 0.3s;
+  }
+
+  @media (max-width: 1024px) {
+    nav { padding: 0 24px; }
+    .nav-links { display: none; }
+    .hamburger { display: flex; }
+    .section-inner { padding: 0 24px; }
+    .features-grid { grid-template-columns: repeat(2, 1fr); }
+    .pricing-grid { grid-template-columns: 1fr; max-width: 420px; margin: 64px auto 0; }
+    .dash-layout { grid-template-columns: 1fr; }
+    .dash-sidebar { display: none; }
+    .ai-grid { grid-template-columns: 1fr; }
+    .testimonials-grid { grid-template-columns: 1fr; }
+    .footer-inner { grid-template-columns: 1fr 1fr; gap: 40px; }
+    .steps-wrapper { grid-template-columns: repeat(2, 1fr); }
+    .features-header { grid-template-columns: 1fr; }
+    .hero-stats { gap: 24px; }
+    .dash-scores { grid-template-columns: repeat(2, 1fr); }
+    .dash-bottom { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 600px) {
+    .hero-title { font-size: 2.5rem; }
+    .hero-actions { flex-direction: column; }
+    .hero-stats { flex-direction: column; gap: 16px; }
+    .stat-divider { display: none; }
+    .steps-wrapper { grid-template-columns: 1fr; }
+    .features-grid { grid-template-columns: 1fr; }
+    .footer-inner { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- CURSOR -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">
+    WebAudit<span style="color:var(--accent)">X</span>
+    <span class="logo-badge">BETA</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#features">Features</a></li>
+    <li><a href="#how">How it Works</a></li>
+    <li><a href="#dashboard">Dashboard</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#team">Team</a></li>
+  </ul>
+  <div class="nav-cta">
+    <a href="#" class="btn-ghost">Sign In</a>
+    <a href="#" class="btn-primary">Start Free Audit</a>
+  </div>
+  <div class="hamburger">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-grid"></div>
+  <div class="hero-orb1"></div>
+  <div class="hero-orb2"></div>
+
+  <span class="hero-tag">✦ AI-POWERED · WEB INTELLIGENCE PLATFORM</span>
+
+  <h1 class="hero-title">
+    Audit any website.<br>
+    <span class="accent-word">Fix everything.</span><br>
+    Dominate the web.
+  </h1>
+
+  <p class="hero-sub">
+    Enter a URL and get a complete 360° audit in seconds — SEO, performance, security, UX, accessibility and more. Powered by real AI.
+  </p>
+
+  <div class="url-bar-wrapper">
+    <div class="url-bar">
+      <span class="url-prefix">https://</span>
+      <input class="url-input" type="text" placeholder="yourwebsite.com" />
+      <button class="url-submit">→ Run Audit</button>
+    </div>
+  </div>
+
+  <div class="hero-actions">
+    <a href="#pricing" class="btn-hero">Get Started Free</a>
+    <a href="#dashboard" class="btn-hero-outline">
+      <span class="play-icon">▶</span>
+      See Live Demo
+    </a>
+  </div>
+
+  <div class="hero-stats">
+    <div class="stat-item">
+      <div class="stat-num">25<span>+</span></div>
+      <div class="stat-label">Audit Features</div>
+    </div>
+    <div class="stat-divider"></div>
+    <div class="stat-item">
+      <div class="stat-num">3<span>s</span></div>
+      <div class="stat-label">Avg. Scan Time</div>
+    </div>
+    <div class="stat-divider"></div>
+    <div class="stat-item">
+      <div class="stat-num">98<span>%</span></div>
+      <div class="stat-label">Accuracy Rate</div>
+    </div>
+    <div class="stat-divider"></div>
+    <div class="stat-item">
+      <div class="stat-num">5<span>k+</span></div>
+      <div class="stat-label">Sites Audited</div>
+    </div>
+  </div>
+</section>
+
+<!-- LOGOS -->
+<div class="logos-section">
+  <div class="logos-label">Trusted by teams building with</div>
+  <div class="marquee-wrapper">
+    <div class="marquee-track">
+      <span class="logo-chip">WordPress</span>
+      <span class="logo-chip">Shopify</span>
+      <span class="logo-chip">Google Analytics</span>
+      <span class="logo-chip">GitHub</span>
+      <span class="logo-chip">Slack</span>
+      <span class="logo-chip">Figma</span>
+      <span class="logo-chip">Ahrefs</span>
+      <span class="logo-chip">Lighthouse</span>
+      <span class="logo-chip">Moz</span>
+      <span class="logo-chip">SEMrush</span>
+      <span class="logo-chip">AWS</span>
+      <span class="logo-chip">Vercel</span>
+      <span class="logo-chip">WordPress</span>
+      <span class="logo-chip">Shopify</span>
+      <span class="logo-chip">Google Analytics</span>
+      <span class="logo-chip">GitHub</span>
+      <span class="logo-chip">Slack</span>
+      <span class="logo-chip">Figma</span>
+      <span class="logo-chip">Ahrefs</span>
+      <span class="logo-chip">Lighthouse</span>
+      <span class="logo-chip">Moz</span>
+      <span class="logo-chip">SEMrush</span>
+      <span class="logo-chip">AWS</span>
+      <span class="logo-chip">Vercel</span>
+    </div>
+  </div>
+</div>
+
+<!-- FEATURES -->
+<section class="features-section" id="features">
+  <div class="section-inner">
+    <div class="features-header">
+      <div>
+        <div class="section-tag">FEATURES</div>
+        <h2 class="section-title">Everything your site needs, in one audit</h2>
+      </div>
+      <p class="section-sub">
+        25+ powerful audit checks across 15 categories. From Core Web Vitals to security headers — nothing escapes WebAudit X.
+      </p>
+    </div>
+
+    <div class="features-grid reveal">
+      <div class="feature-card">
+        <div class="feature-icon" style="background:rgba(0,230,180,0.1)">🎨</div>
+        <h3>UI/UX Design Analysis</h3>
+        <p>Visual hierarchy, font contrast, CTA placement, heatmaps, and mobile vs desktop layout comparison.</p>
+        <span class="feature-count">01</span>
+
+           <div style="text-align:center; margin-top:48px;">
+      <a href="#" class="price-btn filled" style="display:inline-block;">UX Deep Dive →</a>
+
+      
+    </div>
+      </div>
+
+
+      <div class="feature-card">
+        <div class="feature-icon" style="background:rgba(59,130,246,0.1)">📱</div>
+        <h3>Mobile-Friendliness</h3>
+        <p>Responsive layout checks, tap target sizing, gesture usability, and mobile speed metrics.</p>
+        <span class="feature-count">02</span>
+        
+                <div style="text-align:center; margin-top:48px;">
+      <a href="#" class="price-btn filled" style="display:inline-block;">Mobile Ready Scan →</a>
+
+      
+    </div>
+      </div>
+
+
+      <div class="feature-card">
+        <div class="feature-icon" style="background:rgba(245,158,11,0.1)">♿</div>
+        <h3>Accessibility & WCAG</h3>
+        <p>WCAG 2.1/2.2 scoring, alt text, ARIA roles, keyboard navigation, and screen reader tests.</p>
+        <span class="feature-count">03</span>
+                <div style="text-align:center; margin-top:48px;">
+      <a href="#" class="price-btn filled" style="display:inline-block;">a11y Audit →</a>
+
+      
+    </div>
+      </div>
+
+
+      <div class="feature-card">
+        <div class="feature-icon" style="background:rgba(239,68,68,0.1)">🔍</div>
+        <h3>SEO & Content Analysis</h3>
+        <p>Meta tags, heading structure, keyword density, sitemap validation, and broken link detection.</p>
+        <span class="feature-count">04</span>
+                <div style="text-align:center; margin-top:48px;">
+      <a href="#" class="price-btn filled" style="display:inline-block;">SEO Health Check →</a>
+
+      
+    </div>
+      </div>
+
+
+      <div class="feature-card">
+        <div class="feature-icon" style="background:rgba(168,85,247,0.1)">⚡</div>
+        <h3>Performance Testing</h3>
+        <p>Lighthouse scores, LCP, CLS, TBT, load time, image optimization, and JS/CSS analysis.</p>
+        <span class="feature-count">05</span>
+                <div style="text-align:center; margin-top:48px;">
+      <a href="#" class="price-btn filled" style="display:inline-block;">Performance Scan →</a>
+
+      
+    </div>
+      </div>
+
+
+      <div class="feature-card">
+        <div class="feature-icon" style="background:rgba(0,230,180,0.1)">🔐</div>
+        <h3>Security & HTTPS</h3>
+        <p>SSL certificate validity, security headers, malware scanning, and CMS vulnerability checks.</p>
+        <span class="feature-count">06</span>
+                <div style="text-align:center; margin-top:48px;">
+      <a href="#" class="price-btn filled" style="display:inline-block;">Security Audit →</a>
+
+      
+    </div>
+      </div>
+
+
+      <div class="feature-card">
+        <div class="feature-icon" style="background:rgba(59,130,246,0.1)">⭐</div>
+        <h3>Social Proof & Trust</h3>
+        <p>Testimonials, trust badges, contact info presence, live chat, and review integrations.</p>
+        <span class="feature-count">07</span>
+                <div style="text-align:center; margin-top:48px;">
+      <a href="#" class="price-btn filled" style="display:inline-block;">Trust Signals Review →</a>
+
+      
+    </div>
+      </div>
+
+
+      <div class="feature-card">
+        <div class="feature-icon" style="background:rgba(245,158,11,0.1)">🗺️</div>
+        <h3>Structure & Navigation</h3>
+        <p>Full site crawl, menu analysis, breadcrumbs, orphaned pages, and blog section checks.</p>
+        <span class="feature-count">08</span>
+                <div style="text-align:center; margin-top:48px;">
+      <a href="#" class="price-btn filled" style="display:inline-block;">Site Structure Audit →</a>
+
+      
+    </div>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon" style="background:rgba(239,68,68,0.1)">🔧</div>
+        <h3>Technical Insights</h3>
+        <p>Domain authority, spam score, backlink analysis, CMS detection, and schema markup validation.</p>
+        <span class="feature-count">09</span>
+                <div style="text-align:center; margin-top:48px;">
+      <a href="#" class="price-btn filled" style="display:inline-block;">Tech Stack Scan →→</a>
+
+      
+    </div>
+      </div>
+
+
+    </div>
+  </div>
+</section>
+
+
+
+<!-- DASHBOARD PREVIEW -->
+<section class="dashboard-section" id="dashboard">
+  <div class="section-inner">
+    <div class="section-tag">DASHBOARD</div>
+    <h2 class="section-title reveal">Your audit results, <span style="color:var(--accent)">crystal clear</span></h2>
+    <p class="section-sub reveal">A full-featured interactive dashboard with scores, issues, charts, and AI recommendations — all in one place.</p>
+
+    <div class="dash-layout reveal">
+      <!-- Sidebar -->
+      <div class="dash-sidebar">
+        <div class="dash-logo">
+          WebAudit<span style="color:var(--accent)">X</span>
+        </div>
+        <div class="dash-nav-section">MAIN</div>
+        <div class="dash-nav-item active"><span class="dash-nav-icon">📊</span> Overview</div>
+        <div class="dash-nav-item"><span class="dash-nav-icon">🔍</span> Audits</div>
+        <div class="dash-nav-item"><span class="dash-nav-icon">📋</span> Reports</div>
+        <div class="dash-nav-item"><span class="dash-nav-icon">🤖</span> AI Assistant</div>
+        <div class="dash-nav-section">ANALYSIS</div>
+        <div class="dash-nav-item"><span class="dash-nav-icon">⚡</span> Performance</div>
+        <div class="dash-nav-item"><span class="dash-nav-icon">🔍</span> SEO</div>
+        <div class="dash-nav-item"><span class="dash-nav-icon">🔐</span> Security</div>
+        <div class="dash-nav-item"><span class="dash-nav-icon">♿</span> Accessibility</div>
+        <div class="dash-nav-section">SETTINGS</div>
+        <div class="dash-nav-item"><span class="dash-nav-icon">⚙️</span> Settings</div>
+        <div class="dash-nav-item"><span class="dash-nav-icon">👥</span> Team</div>
+      </div>
+
+      <!-- Main -->
+      <div class="dash-main">
+        <div class="dash-topbar">
+          <div>
+            <div class="dash-topbar-title">example-business.lk</div>
+            <div style="font-size:0.72rem;color:var(--muted);margin-top:3px;font-family:'Space Mono',monospace">Last audited: 2 hours ago</div>
+          </div>
+          <div class="dash-topbar-right">
+            <div style="font-size:0.75rem;color:var(--muted);padding:7px 14px;border:1px solid var(--border);border-radius:6px;">📅 Schedule</div>
+            <div class="dash-btn-sm">↻ Re-audit</div>
+          </div>
+          
+        </div>
+
+        <div class="dash-scores">
+          <div class="score-card">
+            <div class="score-label">PERFORMANCE</div>
+            <div class="score-value" style="color:#22c55e">87</div>
+            <div class="score-bar"><div class="score-bar-fill" style="width:87%;background:linear-gradient(90deg,#22c55e,rgba(34,197,94,0.4))"></div></div>
+            <div class="score-trend up">↑ +12 from last audit</div>
+          </div>
+          <div class="score-card">
+            <div class="score-label">SEO SCORE</div>
+            <div class="score-value" style="color:var(--accent)">73</div>
+            <div class="score-bar"><div class="score-bar-fill" style="width:73%;background:linear-gradient(90deg,var(--accent),rgba(0,230,180,0.4))"></div></div>
+            <div class="score-trend up">↑ +5 from last audit</div>
+          </div>
+          <div class="score-card">
+            <div class="score-label">ACCESSIBILITY</div>
+            <div class="score-value" style="color:var(--accent3)">61</div>
+            <div class="score-bar"><div class="score-bar-fill" style="width:61%;background:linear-gradient(90deg,var(--accent3),rgba(245,158,11,0.4))"></div></div>
+            <div class="score-trend down">↓ -3 from last audit</div>
+          </div>
+          <div class="score-card">
+            <div class="score-label">SECURITY</div>
+            <div class="score-value" style="color:var(--warn)">44</div>
+            <div class="score-bar"><div class="score-bar-fill" style="width:44%;background:linear-gradient(90deg,var(--warn),rgba(239,68,68,0.4))"></div></div>
+            <div class="score-trend down">↓ Needs attention</div>
+          </div>
+        </div>
+
+        <div class="dash-bottom">
+          <div class="dash-panel">
+            <div class="panel-title">
+              Critical Issues
+              <span class="panel-badge">7 FOUND</span>
+            </div>
+            <div class="issue-item">
+              <div class="issue-dot" style="background:var(--warn)"></div>
+              <div class="issue-text">Missing SSL security headers (CSP, HSTS)</div>
+              <div class="issue-level" style="background:rgba(239,68,68,0.1);color:var(--warn)">HIGH</div>
+            </div>
+            <div class="issue-item">
+              <div class="issue-dot" style="background:var(--warn)"></div>
+              <div class="issue-text">LCP exceeds 4s on mobile devices</div>
+              <div class="issue-level" style="background:rgba(239,68,68,0.1);color:var(--warn)">HIGH</div>
+            </div>
+            <div class="issue-item">
+              <div class="issue-dot" style="background:var(--accent3)"></div>
+              <div class="issue-text">14 images missing alt text attributes</div>
+              <div class="issue-level" style="background:rgba(245,158,11,0.1);color:var(--accent3)">MED</div>
+            </div>
+            <div class="issue-item">
+              <div class="issue-dot" style="background:var(--accent3)"></div>
+              <div class="issue-text">No H1 tag on 3 landing pages</div>
+              <div class="issue-level" style="background:rgba(245,158,11,0.1);color:var(--accent3)">MED</div>
+            </div>
+            <div class="issue-item">
+              <div class="issue-dot" style="background:var(--accent2)"></div>
+              <div class="issue-text">robots.txt disallowing 2 key pages</div>
+              <div class="issue-level" style="background:rgba(59,130,246,0.1);color:var(--accent2)">LOW</div>
+            </div>
+          </div>
+          <div class="dash-panel">
+            <div class="panel-title">
+              Score History
+              <span class="panel-badge" style="background:rgba(59,130,246,0.1);color:var(--accent2)">6 MONTHS</span>
+            </div>
+            <div class="bar-chart">
+              <div class="bar-col">
+                <div class="bar-fill" style="height:40px"></div>
+                <div class="bar-label">Oct</div>
+              </div>
+              <div class="bar-col">
+                <div class="bar-fill" style="height:52px"></div>
+                <div class="bar-label">Nov</div>
+              </div>
+              <div class="bar-col">
+                <div class="bar-fill accent" style="height:44px"></div>
+                <div class="bar-label">Dec</div>
+              </div>
+              <div class="bar-col">
+                <div class="bar-fill" style="height:58px"></div>
+                <div class="bar-label">Jan</div>
+              </div>
+              <div class="bar-col">
+                <div class="bar-fill accent" style="height:68px"></div>
+                <div class="bar-label">Feb</div>
+              </div>
+              <div class="bar-col">
+                <div class="bar-fill" style="height:76px"></div>
+                <div class="bar-label">Mar</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how-section" id="how">
+  <div class="section-inner">
+    <div style="text-align:center; margin-bottom: 0">
+      <div class="section-tag" style="justify-content:center">HOW IT WORKS</div>
+      <h2 class="section-title reveal">From URL to insights in <span style="color:var(--accent)">4 steps</span></h2>
+      <p class="section-sub reveal" style="margin: 0 auto">Simple enough for non-technical users, deep enough for engineers.</p>
+    </div>
+
+    <div class="steps-wrapper reveal">
+      <div class="step-item">
+        <div class="step-num">01</div>
+        <h3>Submit Your URL</h3>
+        <p>Paste any public website URL into the audit input bar. No account required for basic scans.</p>
+      </div>
+      <div class="step-item">
+        <div class="step-num">02</div>
+        <h3>Automated Analysis</h3>
+        <p>Our engine runs 25+ checks across performance, SEO, security, UX, and accessibility simultaneously.</p>
+      </div>
+      <div class="step-item">
+        <div class="step-num">03</div>
+        <h3>AI Generates Insights</h3>
+        <p>GPT-powered AI translates raw data into plain-English summaries and prioritized fix lists.</p>
+      </div>
+      <div class="step-item">
+        <div class="step-num">04</div>
+        <h3>Download & Track</h3>
+        <p>Export branded PDF reports, share with clients, and track improvements over time.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- AI SECTION -->
+<section class="ai-section" id="ai">
+  <div class="section-inner">
+    <div class="ai-grid">
+      <div>
+        <div class="section-tag">AI ASSISTANT</div>
+        <h2 class="section-title reveal">Your site's personal <span style="color:var(--accent)">AI analyst</span></h2>
+        <p class="section-sub reveal" style="margin-bottom:36px">No more decoding technical jargon. Our AI explains every issue and tells you exactly what to fix — in simple terms.</p>
+
+        <ul class="ai-features-list reveal">
+          <li>
+            <div class="ai-icon" style="background:rgba(0,230,180,0.1)">📝</div>
+            <div class="ai-feature-text">
+              <h4>AI Audit Summaries</h4>
+              <p>Auto-generated plain-English summary of your entire audit with key takeaways.</p>
+            </div>
+          </li>
+          <li>
+            <div class="ai-icon" style="background:rgba(59,130,246,0.1)">🔧</div>
+            <div class="ai-feature-text">
+              <h4>Smart Fix Suggestions</h4>
+              <p>Prioritized list of fixes with step-by-step instructions tailored to your CMS.</p>
+            </div>
+          </li>
+          <li>
+            <div class="ai-icon" style="background:rgba(245,158,11,0.1)">✨</div>
+            <div class="ai-feature-text">
+              <h4>Auto Content Rewrite</h4>
+              <p>Poor meta tags or content? AI rewrites them instantly for better SEO performance.</p>
+            </div>
+          </li>
+          <li>
+            <div class="ai-icon" style="background:rgba(168,85,247,0.1)">💬</div>
+            <div class="ai-feature-text">
+              <h4>AI Chatbot</h4>
+              <p>Ask any question about your audit results and get intelligent, contextual answers.</p>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <div class="ai-visual reveal">
+        <div style="font-family:'Space Mono',monospace;font-size:0.65rem;color:var(--muted);margin-bottom:20px;letter-spacing:1px;">AI ASSISTANT · LIVE CHAT</div>
+
+        <div class="chat-msg">
+          <div class="chat-avatar user">U</div>
+          <div class="chat-bubble">Why is my LCP score so low? What should I fix first?</div>
+        </div>
+
+        <div class="chat-msg" style="flex-direction:row-reverse">
+          <div class="chat-avatar ai">X</div>
+          <div class="chat-bubble ai-bubble">
+            Your <span class="highlight">LCP of 4.2s</span> is mainly caused by 3 uncompressed hero images (total 2.4MB). I recommend:
+            <br><br>
+            1. Convert images to <span class="highlight">WebP format</span> — saves ~68%<br>
+            2. Add <span class="highlight">lazy loading</span> to below-fold images<br>
+            3. Enable <span class="highlight">browser caching</span> headers
+            <br><br>
+            This should bring your LCP under 2.5s. Want me to generate the code?
+          </div>
+        </div>
+
+        <div class="chat-msg">
+          <div class="chat-avatar user">U</div>
+          <div class="chat-bubble">Yes, generate the WordPress code for image optimization</div>
+        </div>
+
+        <div class="chat-msg" style="flex-direction:row-reverse;align-items:flex-start">
+          <div class="chat-avatar ai">X</div>
+          <div class="chat-bubble ai-bubble">
+            <div class="typing-indicator">
+              <div class="typing-dot"></div>
+              <div class="typing-dot"></div>
+              <div class="typing-dot"></div>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top:20px;padding:14px;background:rgba(0,0,0,0.3);border-radius:8px;border:1px solid var(--border)">
+          <div style="font-family:'Space Mono',monospace;font-size:0.65rem;color:var(--accent);margin-bottom:8px;">PHP · functions.php</div>
+          <div style="font-family:'Space Mono',monospace;font-size:0.72rem;color:#6b8fa0;line-height:1.6">
+            add_filter('wp_get_attachment_image_attributes',<br>
+            &nbsp;&nbsp;function($attr) {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;$attr['loading'] = 'lazy';<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;return $attr;<br>
+            &nbsp;&nbsp;});<br>
+            add_theme_support('webp-uploads');
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing-section" id="pricing">
+  <div class="section-inner">
+    <div style="text-align:center">
+      <div class="section-tag" style="justify-content:center">PRICING</div>
+      <h2 class="section-title reveal">Simple, transparent pricing</h2>
+      <p class="section-sub reveal" style="margin:0 auto">Start free. Scale as you grow. No hidden fees — ever.</p>
+    </div>
+
+    <div class="pricing-grid reveal">
+      <div class="price-card">
+        <div class="price-plan">Starter</div>
+        <div class="price-amount"><sup>$</sup>0</div>
+        <div class="price-period">Free forever — no credit card</div>
+        <div class="price-divider"></div>
+        <ul class="price-features">
+          <li><span class="check">✓</span> 5 audits per month</li>
+          <li><span class="check">✓</span> Basic SEO & performance check</li>
+          <li><span class="check">✓</span> PDF report export</li>
+          <li><span class="check">✓</span> Mobile-friendliness test</li>
+          <li><span class="x">✗</span> AI fix suggestions</li>
+          <li><span class="x">✗</span> Scheduled monitoring</li>
+          <li><span class="x">✗</span> Team collaboration</li>
+        </ul>
+        <a href="#" class="price-btn outline">Get Started Free</a>
+      </div>
+
+      <div class="price-card popular">
+        <div class="popular-badge">MOST POPULAR</div>
+        <div class="price-plan" style="color:var(--accent)">Professional</div>
+        <div class="price-amount"><sup>$</sup>29<span style="font-size:1.2rem;font-weight:400;color:var(--muted)">/mo</span></div>
+        <div class="price-period">Billed monthly · cancel anytime</div>
+        <div class="price-divider"></div>
+        <ul class="price-features">
+          <li><span class="check">✓</span> Unlimited audits</li>
+          <li><span class="check">✓</span> All 25+ audit features</li>
+          <li><span class="check">✓</span> AI summaries & fix suggestions</li>
+          <li><span class="check">✓</span> Scheduled monitoring</li>
+          <li><span class="check">✓</span> White-label PDF reports</li>
+          <li><span class="check">✓</span> Competitor comparison</li>
+          <li><span class="x">✗</span> Custom integrations</li>
+        </ul>
+        <a href="#" class="price-btn filled">Start 14-Day Trial</a>
+      </div>
+
+      <div class="price-card">
+        <div class="price-plan">Agency</div>
+        <div class="price-amount"><sup>$</sup>89<span style="font-size:1.2rem;font-weight:400;color:var(--muted)">/mo</span></div>
+        <div class="price-period">Per team · up to 10 members</div>
+        <div class="price-divider"></div>
+        <ul class="price-features">
+          <li><span class="check">✓</span> Everything in Professional</li>
+          <li><span class="check">✓</span> Client portals</li>
+          <li><span class="check">✓</span> Custom integrations (API)</li>
+          <li><span class="check">✓</span> Priority support</li>
+          <li><span class="check">✓</span> ROI estimator</li>
+          <li><span class="check">✓</span> Voice command assistant</li>
+          <li><span class="check">✓</span> Zapier / Make workflows</li>
+        </ul>
+        <a href="#" class="price-btn outline">Contact Sales</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials-section" id="team">
+  <div class="section-inner">
+    <div style="text-align:center">
+      <div class="section-tag" style="justify-content:center">TESTIMONIALS</div>
+      <h2 class="section-title reveal">Loved by developers, <span style="color:var(--accent)">trusted by agencies</span></h2>
+    </div>
+
+    <div class="testimonials-grid reveal">
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <div class="testi-quote">"</div>
+        <div class="testi-text">WebAudit X replaced 6 different tools we were using. The AI suggestions alone saved us 3 hours per client report. Absolutely game-changing for our agency.</div>
+        <div class="testi-author">
+          <div class="testi-avatar">DK</div>
+          <div>
+            <div class="testi-name">Dilshan Karunarathne</div>
+            <div class="testi-role">Digital Agency Owner, Colombo</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="testi-card" style="border-color:rgba(0,230,180,0.2)">
+        <div class="testi-stars">★★★★★</div>
+        <div class="testi-quote">"</div>
+        <div class="testi-text">As a developer who hates manual site checks, this is exactly what I needed. The security headers report caught a critical vulnerability I'd missed for months.</div>
+        <div class="testi-author">
+          <div class="testi-avatar" style="background:linear-gradient(135deg,var(--accent),#00b4d8)">SP</div>
+          <div>
+            <div class="testi-name">Sanjay Perera</div>
+            <div class="testi-role">Full Stack Developer, Sri Lanka</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <div class="testi-quote">"</div>
+        <div class="testi-text">Our non-technical clients can finally understand their website health. The plain-English AI reports have made client communication so much smoother.</div>
+        <div class="testi-author">
+          <div class="testi-avatar" style="background:linear-gradient(135deg,var(--accent3),#f97316)">RJ</div>
+          <div>
+            <div class="testi-name">Ruwanthi Jayawardena</div>
+            <div class="testi-role">Marketing Consultant</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TEAM SECTION 
+<section style="padding: 100px 0; background: var(--surface);">
+  <div class="section-inner">
+    <div style="text-align:center; margin-bottom:64px">
+      <div class="section-tag" style="justify-content:center">THE TEAM</div>
+      <h2 class="section-title reveal">Built by <span style="color:var(--accent)">Group No. 5</span></h2>
+      <p class="section-sub reveal" style="margin:0 auto">Final Year Software Engineering — Open University of Sri Lanka</p>
+    </div>
+
+    <div style="display:grid; grid-template-columns:repeat(5,1fr); gap:20px" class="reveal">
+      <div style="text-align:center; padding:28px 16px; background:var(--bg); border:1px solid var(--border); border-radius:12px;">
+        <div style="width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,var(--accent),#00b4d8);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-family:'Syne',sans-serif;font-weight:800;font-size:1.1rem;color:var(--bg)">AA</div>
+        <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:0.88rem;margin-bottom:4px">A Agilan</div>
+        <div style="font-size:0.72rem;color:var(--accent);font-family:'Space Mono',monospace">Project Lead</div>
+        <div style="font-size:0.68rem;color:var(--muted);margin-top:4px">520268729</div>
+      </div>
+      <div style="text-align:center; padding:28px 16px; background:var(--bg); border:1px solid var(--border); border-radius:12px;">
+        <div style="width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,var(--accent2),var(--accent));display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-family:'Syne',sans-serif;font-weight:800;font-size:1.1rem;color:var(--bg)">BT</div>
+        <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:0.88rem;margin-bottom:4px">B C Thakshina</div>
+        <div style="font-size:0.72rem;color:var(--accent);font-family:'Space Mono',monospace">AI Engineer</div>
+        <div style="font-size:0.68rem;color:var(--muted);margin-top:4px">321429319</div>
+      </div>
+      <div style="text-align:center; padding:28px 16px; background:var(--bg); border:1px solid var(--border); border-radius:12px;">
+        <div style="width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,var(--accent3),#f97316);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-family:'Syne',sans-serif;font-weight:800;font-size:1.1rem;color:var(--bg)">WN</div>
+        <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:0.88rem;margin-bottom:4px">W G A C Nandasena</div>
+        <div style="font-size:0.72rem;color:var(--accent);font-family:'Space Mono',monospace">QA Engineer</div>
+        <div style="font-size:0.68rem;color:var(--muted);margin-top:4px">220262285</div>
+      </div>
+      <div style="text-align:center; padding:28px 16px; background:var(--bg); border:1px solid var(--border); border-radius:12px;">
+        <div style="width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,#a855f7,var(--accent2));display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-family:'Syne',sans-serif;font-weight:800;font-size:1.1rem;color:var(--bg)">YK</div>
+        <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:0.88rem;margin-bottom:4px">Y Keshani</div>
+        <div style="font-size:0.72rem;color:var(--accent);font-family:'Space Mono',monospace">Research & BA</div>
+        <div style="font-size:0.68rem;color:var(--muted);margin-top:4px">420260731</div>
+      </div>
+      <div style="text-align:center; padding:28px 16px; background:var(--bg); border:1px solid var(--border); border-radius:12px;">
+        <div style="width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,#ec4899,#a855f7);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-family:'Syne',sans-serif;font-weight:800;font-size:1.1rem;color:var(--bg)">BT</div>
+        <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:0.88rem;margin-bottom:4px">B Thanishka</div>
+        <div style="font-size:0.72rem;color:var(--accent);font-family:'Space Mono',monospace">UX/UI Engineer</div>
+        <div style="font-size:0.68rem;color:var(--muted);margin-top:4px">220260678</div>
+      </div>
+    </div>
+  </div>
+</section> -->
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="section-inner">
+    <div class="cta-inner">
+      <h2 class="cta-title reveal">Ready to fix your<br><span style="color:var(--accent)">website today?</span></h2>
+      <p class="cta-sub reveal">Join thousands of businesses using WebAudit X to build faster, safer, and smarter websites.</p>
+      <div class="cta-actions reveal">
+        <a href="#" class="btn-hero">Start Free Audit</a>
+        <a href="#pricing" class="btn-hero-outline">View Pricing</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="section-inner">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <div class="nav-logo" style="display:inline-flex;text-decoration:none">
+          WebAudit<span style="color:var(--accent)">X</span>
+          <span class="logo-badge">BETA</span>
+        </div>
+        <p>An AI-powered comprehensive web auditing and optimization system. Built by Group No. 5, Open University of Sri Lanka.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Product</h4>
+        <ul>
+          <li><a href="#">Features</a></li>
+          <li><a href="#">Pricing</a></li>
+          <li><a href="#">Dashboard</a></li>
+          <li><a href="#">API Docs</a></li>
+          <li><a href="#">Chrome Extension</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Audit Types</h4>
+        <ul>
+          <li><a href="#">SEO Analysis</a></li>
+          <li><a href="#">Performance</a></li>
+          <li><a href="#">Security</a></li>
+          <li><a href="#">Accessibility</a></li>
+          <li><a href="#">Mobile Test</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="#">About</a></li>
+          <li><a href="#">Team</a></li>
+          <li><a href="#">Blog</a></li>
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Terms of Service</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div class="footer-copy">© 2025 WebAudit X · Group No. 5 · OUSL BSE Final Project</div>
+      <div class="footer-socials">
+        <a href="#" class="social-link">𝕏</a>
+        <a href="#" class="social-link">in</a>
+        <a href="#" class="social-link">gh</a>
+        <a href="#" class="social-link">fb</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Custom cursor
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    cursor.style.transform = `translate(${mx - 5}px, ${my - 5}px)`;
+  });
+  function animateRing() {
+    rx += (mx - rx - 17) * 0.15;
+    ry += (my - ry - 17) * 0.15;
+    ring.style.transform = `translate(${rx}px, ${ry}px)`;
+    requestAnimationFrame(animateRing);
+  }
+  animateRing();
+  document.querySelectorAll('a, button, .feature-card, .price-card, .dash-nav-item').forEach(el => {
+    el.addEventListener('mouseenter', () => {
+      ring.style.width = '54px'; ring.style.height = '54px';
+      ring.style.borderColor = 'rgba(0,230,180,0.8)';
+    });
+    el.addEventListener('mouseleave', () => {
+      ring.style.width = '34px'; ring.style.height = '34px';
+      ring.style.borderColor = 'var(--accent)';
+    });
+  });
+
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 80);
+      }
+    });
+  }, { threshold: 0.12 });
+  reveals.forEach(el => observer.observe(el));
+
+  // Nav scroll effect
+  window.addEventListener('scroll', () => {
+    const nav = document.querySelector('nav');
+    nav.style.borderBottomColor = window.scrollY > 40
+      ? 'rgba(0,230,180,0.15)'
+      : 'rgba(0,230,180,0.12)';
+  });
+
+  // URL input placeholder cycling
+  const placeholders = [
+    'example-business.lk',
+    'yourcompany.com',
+    'myclient-website.com',
+    'startup-landing.io'
+  ];
+  let pi = 0;
+  const urlInput = document.querySelector('.url-input');
+  if (urlInput) {
+    setInterval(() => {
+      pi = (pi + 1) % placeholders.length;
+      urlInput.setAttribute('placeholder', placeholders[pi]);
+    }, 2800);
+  }
+
+  // Animate score bars on scroll
+  const scoreObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.querySelectorAll('.score-bar-fill').forEach(bar => {
+          const w = bar.style.width;
+          bar.style.width = '0';
+          setTimeout(() => bar.style.width = w, 100);
+        });
+        entry.target.querySelectorAll('.bar-fill').forEach(bar => {
+          const h = bar.style.height;
+          bar.style.height = '0';
+          setTimeout(() => bar.style.height = h, 200);
+        });
+      }
+    });
+  }, { threshold: 0.3 });
+  document.querySelectorAll('.dash-scores, .bar-chart').forEach(el => scoreObserver.observe(el));
+
+  // Smooth scroll for anchor links
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      const target = document.querySelector(a.getAttribute('href'));
+      if (target) target.scrollIntoView({ behavior: 'smooth' });
+    });
+  });
+
+  // Typing animation in AI chat
+  let typed = false;
+  const aiObs = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting && !typed) {
+        typed = true;
+        setTimeout(() => {
+          const typingBubble = entry.target.querySelector('.chat-bubble:last-of-type .typing-indicator');
+          if (!typingBubble) return;
+          const parent = typingBubble.closest('.chat-bubble');
+          setTimeout(() => {
+            if (parent) parent.innerHTML = `Here's the WordPress snippet for lazy loading and WebP support. <span class="highlight">Copy it to your functions.php</span> file and save. Your LCP should improve by ~40%.`;
+          }, 2000);
+        }, 1000);
+      }
+    });
+  }, { threshold: 0.5 });
+  const aiVisual = document.querySelector('.ai-visual');
+  if (aiVisual) aiObs.observe(aiVisual);
+</script>
+</body>
+</html>

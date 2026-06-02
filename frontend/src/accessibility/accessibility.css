@@ -1,0 +1,888 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;600;700;800&family=IBM+Plex+Mono:wght@400;700&display=swap');
+
+/* ============================================================
+   DESIGN TOKENS — scoped to module root (no :root conflict)
+   ============================================================ */
+
+/* ============================================================
+   RESET & BASE
+   ============================================================ */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html { scroll-behavior: smooth; }
+
+/* Noise overlay — matches Home */
+.acc-root-acc::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 1000;
+  opacity: 0.4;
+}
+
+/* ============================================================
+   ROOT
+   ============================================================ */
+.acc-root-acc {
+  /* ── Design tokens scoped here — no :root conflict with other modules ── */
+  --bg: #f8fafc;
+  --surface: #ffffff;
+  --surface2: #f1f5f9;
+  --border: rgba(0, 0, 0, 0.08);
+  --accent: #00b894;
+  --accent2: #3b82f6;
+  --accent3: #f59e0b;
+  --warn: #ef4444;
+  --text: #0f172a;
+  --muted: #64748b;
+  --glow: rgba(0, 184, 148, 0.12);
+  --green: #22c55e;
+  --yellow: #f59e0b;
+  --orange: #f97316;
+  --red: #ef4444;
+  --radius: 10px;
+  --sans: 'Inter', sans-serif;
+  --mono: 'IBM Plex Mono', monospace;
+
+  font-family: var(--sans);
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+  cursor: ;
+}
+
+/* ============================================================
+   HEADER — mirrors wax-navLP
+   ============================================================ */
+.acc-header-acc {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 900;
+  display: flex;
+  align-items: center;
+  height: 68px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  transition: border-bottom-color 0.3s;
+}
+
+.acc-header__inner-acc {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 48px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  width: 100%;
+}
+
+.acc-back-acc {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  transition: color 0.2s;
+    cursor: ;
+  padding: 8px 18px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  white-space: nowrap;
+}
+.acc-back-acc:hover {
+  color: var(--text);
+  border-color: rgba(0, 184, 148, 0.3);
+}
+
+.acc-header__title-acc {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.acc-header__icon-acc {
+  font-size: 1.6rem;
+  line-height: 1;
+}
+.acc-header__title-acc h1 {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--text);
+  letter-spacing: -0.02em;
+}
+.acc-header__title-acc p {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.72rem;
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+/* ============================================================
+   SEARCH — mirrors heroLP + url-bar section
+   ============================================================ */
+.acc-search-acc {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 120px 48px 80px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Grid background — mirrors hero-gridLP */
+.acc-search-acc::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(0, 0, 0, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 0, 0, 0.04) 1px, transparent 1px);
+  background-size: 60px 60px;
+  mask-image: radial-gradient(ellipse 80% 60% at 50% 50%, black 40%, transparent 100%);
+  pointer-events: none;
+}
+
+/* Orb — mirrors hero-orb1LP */
+.acc-search-acc::after {
+  content: '';
+  position: absolute;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(0, 184, 148, 0.12) 0%, transparent 70%);
+  top: -100px;
+  left: -100px;
+  pointer-events: none;
+  animation: acc-drift1 8s ease-in-out infinite;
+}
+
+@keyframes acc-drift1 {
+  0%, 100% { transform: translate(0, 0); }
+  50%       { transform: translate(40px, 30px); }
+}
+
+.acc-search__inner-acc {
+  max-width: 700px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+/* Badge — mirrors hero-tagLP */
+.acc-search__badge-acc {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.72rem;
+  color: var(--accent);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  background: rgba(0, 184, 148, 0.08);
+  border: 1px solid rgba(0, 184, 148, 0.2);
+  padding: 6px 16px;
+  border-radius: 100px;
+  display: inline-block;
+  margin-bottom: 28px;
+  animation: acc-fadeUp 0.6s ease both;
+}
+
+.acc-search-acc h2 {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 800;
+  font-size: clamp(2.2rem, 5vw, 3.8rem);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: var(--text);
+  margin-bottom: 20px;
+  animation: acc-fadeUp 0.7s 0.1s ease both;
+}
+
+.acc-search-acc h2 span {
+  color: var(--accent);
+  position: relative;
+  display: inline-block;
+}
+.acc-search-acc h2 span::after {
+  content: '';
+  position: absolute;
+  bottom: 4px;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--accent);
+  opacity: 0.4;
+  border-radius: 2px;
+}
+
+.acc-search-acc > .acc-search__inner-acc > p {
+  font-size: 1.05rem;
+  color: var(--muted);
+  margin-bottom: 44px;
+  line-height: 1.7;
+  font-weight: 300;
+  animation: acc-fadeUp 0.7s 0.2s ease both;
+}
+
+/* URL bar — mirrors url-barLP */
+.acc-search__form-acc {
+  display: flex;
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  padding: 6px 6px 6px 20px;
+  gap: 8px;
+  align-items: center;
+  box-shadow: 0 0 40px rgba(0, 184, 148, 0.06), 0 8px 40px rgba(0, 0, 0, 0.08);
+  transition: border-color 0.2s, box-shadow 0.2s;
+  animation: acc-fadeUp 0.7s 0.3s ease both;
+}
+.acc-search__form-acc:focus-within {
+  border-color: rgba(0, 184, 148, 0.4);
+  box-shadow: 0 0 0 4px rgba(0, 184, 148, 0.08), 0 8px 40px rgba(0, 0, 0, 0.08);
+}
+
+.acc-search__input-wrap-acc {
+  flex: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.acc-search__input-icon-acc {
+  font-size: 0.9rem;
+  opacity: 0.4;
+  margin-right: 8px;
+  flex-shrink: 0;
+}
+.acc-search__input-acc {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 0.95rem;
+  font-weight: 400;
+    cursor: ;
+}
+.acc-search__input-acc::placeholder { color: var(--muted); }
+.acc-search__input-acc:disabled     { opacity: 0.5; }
+
+/* Submit — mirrors url-submitLP */
+.acc-search__btn-acc {
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 700;
+  font-size: 0.9rem;
+  padding: 12px 28px;
+  border-radius: 8px;
+    cursor: ;
+  transition: all 0.2s;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+.acc-search__btn-acc:hover:not(:disabled) {
+  box-shadow: 0 0 20px rgba(0, 184, 148, 0.4);
+}
+.acc-search__btn-acc:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ============================================================
+   SCANNING — mirrors how-sectionLP steps feel
+   ============================================================ */
+.acc-scanning-acc {
+  padding: 120px 48px;
+  text-align: center;
+}
+.acc-scanning__inner-acc {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* Pulse ring — accent-coloured */
+.scan-pulse-acc {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: rgba(0, 184, 148, 0.12);
+  margin: 0 auto 28px;
+  position: relative;
+}
+.scan-pulse-acc::before,
+.scan-pulse-acc::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: rgba(0, 184, 148, 0.12);
+  animation: acc-pulse-ring 1.4s ease-out infinite;
+}
+.scan-pulse-acc::after { animation-delay: 0.7s; }
+
+@keyframes acc-pulse-ring {
+  0%   { transform: scale(0.8); opacity: 1; }
+  100% { transform: scale(2);   opacity: 0; }
+}
+
+.acc-scanning__label-acc {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--text);
+  letter-spacing: -0.02em;
+  margin-bottom: 8px;
+}
+.acc-scanning__step-acc {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.85rem;
+  color: var(--accent);
+  margin-bottom: 28px;
+  min-height: 24px;
+}
+
+/* Progress dots — mirrors step circles */
+.acc-scanning__steps-acc {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  flex-wrap: wrap;
+  max-width: 400px;
+  margin: 0 auto;
+}
+.acc-scanning__dot-acc {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--border);
+  transition: background 0.3s, transform 0.3s;
+}
+.acc-scanning__dot--active-acc {
+  background: var(--accent);
+  transform: scale(1.3);
+}
+
+/* ============================================================
+   ERROR — mirrors dashboard warn colours
+   ============================================================ */
+.acc-error-acc {
+  max-width: 700px;
+  margin: 40px auto;
+  padding: 0 48px;
+  background: rgba(239, 68, 68, 0.06);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  border-radius: 10px;
+  padding: 20px 24px;
+  color: var(--warn);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+.acc-error-acc button {
+  margin-left: auto;
+  background: none;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: var(--warn);
+  border-radius: 6px;
+  padding: 6px 16px;
+    cursor: ;
+  font-family: var(--sans);
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: background 0.2s;
+  flex-shrink: 0;
+}
+.acc-error-acc button:hover { background: rgba(239, 68, 68, 0.08); }
+
+/* ============================================================
+   RESULTS WRAPPER
+   ============================================================ */
+.acc-results-acc {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 40px 48px 80px;
+}
+
+/* ============================================================
+   OVERVIEW CARD — mirrors dash-layoutLP + score-cardLP feel
+   ============================================================ */
+.acc-overview-acc {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 36px;
+  margin-bottom: 36px;
+  display: flex;
+  gap: 48px;
+  align-items: center;
+  flex-wrap: wrap;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.06), 0 0 0 1px rgba(0, 184, 148, 0.04);
+}
+
+.acc-overview__score-wrap-acc {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+/* SVG circle inherits — no changes needed */
+.circle-score-acc { display: block; }
+
+.acc-overview__level-acc {
+  display: inline-block;
+  padding: 5px 18px;
+  border-radius: 100px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-weight: 700;
+  font-size: 0.75rem;
+  letter-spacing: 1.5px;
+  margin-bottom: 10px;
+  color: #fff;
+}
+
+.acc-overview__url-acc {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.78rem;
+  color: var(--muted);
+  word-break: break-all;
+}
+
+.acc-overview__stats-acc {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+  flex: 1;
+  justify-content: flex-end;
+}
+
+.acc-stat-acc {
+  text-align: center;
+  min-width: 76px;
+}
+.acc-stat__value-acc {
+  display: block;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 2rem;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+.acc-stat__label-acc {
+  display: block;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.65rem;
+  color: var(--muted);
+  margin-top: 4px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* Dividers between stats */
+.acc-overview__stats-acc .acc-stat-acc + .acc-stat-acc {
+  border-left: 1px solid var(--border);
+  padding-left: 24px;
+}
+
+/* ============================================================
+   SECTION TITLE — mirrors section-tagLP
+   ============================================================ */
+.acc-section-title-acc {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin: 48px 0 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+.acc-section-title-acc::before {
+  content: '';
+  width: 24px;
+  height: 1.5px;
+  background: var(--accent);
+  flex-shrink: 0;
+}
+.acc-section-title-acc small {
+  font-size: 0.72rem;
+  color: var(--muted);
+  font-weight: 400;
+  margin-left: auto;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+/* ============================================================
+   METRICS GRID — mirrors features-gridLP
+   ============================================================ */
+.acc-metrics-grid-acc {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  margin-bottom: 48px;
+}
+
+/* ── Metric card — mirrors feature-cardLP ── */
+.metric-card-acc {
+  background: var(--surface);
+  padding: 32px 28px;
+  position: relative;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(14px);
+  transition:
+    opacity 0.4s ease,
+    transform 0.4s ease,
+    background 0.3s;
+    cursor: ;
+}
+.metric-card--visible-acc {
+  opacity: 1;
+  transform: translateY(0);
+}
+.metric-card-acc:hover { background: var(--surface2); }
+
+/* Top glow line on hover */
+.metric-card-acc::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.metric-card-acc:hover::before { opacity: 1; }
+
+.metric-card__header-acc {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.metric-card__icon-acc {
+  font-size: 1.4rem;
+  line-height: 1;
+  margin-top: 2px;
+}
+.metric-card__label-acc {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--text);
+  margin-bottom: 3px;
+}
+.metric-card__wcag-acc {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.65rem;
+  color: var(--muted);
+}
+.metric-card__score-acc {
+  margin-left: auto;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 1.6rem;
+  font-weight: 800;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+/* Progress bar — mirrors score-barLP */
+.metric-card__bar-track-acc {
+  height: 4px;
+  background: var(--surface2);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-bottom: 14px;
+  border: 1px solid var(--border);
+}
+.metric-card__bar-fill-acc {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.metric-card__footer-acc {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+.metric-card__details-acc {
+  font-size: 0.78rem;
+  color: var(--muted);
+  line-height: 1.55;
+  font-weight: 300;
+}
+
+/* Counter number — mirrors feature-countLP */
+.metric-card-acc .acc-card-count {
+  position: absolute;
+  bottom: 20px;
+  right: 24px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.65rem;
+  color: rgba(0, 184, 148, 0.3);
+}
+
+/* ============================================================
+   STATUS PILLS — mirrors issue-levelLP
+   ============================================================ */
+.status-pill-acc {
+  display: inline-block;
+  padding: 2px 9px;
+  border-radius: 4px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.62rem;
+  font-weight: 700;
+  white-space: nowrap;
+  flex-shrink: 0;
+  letter-spacing: 0.03em;
+}
+.status-pill--pass-acc { background: rgba(34, 197, 94, 0.1);  color: var(--green);  border: 1px solid rgba(34, 197, 94, 0.2); }
+.status-pill--warn-acc { background: rgba(245, 158, 11, 0.1); color: var(--yellow); border: 1px solid rgba(245, 158, 11, 0.2); }
+.status-pill--fail-acc { background: rgba(239, 68, 68, 0.1);  color: var(--red);    border: 1px solid rgba(239, 68, 68, 0.2); }
+.status-pill--info-acc { background: rgba(59, 130, 246, 0.1); color: var(--accent2); border: 1px solid rgba(59, 130, 246, 0.2); }
+
+/* ============================================================
+   ISSUES — mirrors issue-itemLP + dash-panelLP
+   ============================================================ */
+.acc-issues-acc {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 48px;
+}
+
+.acc-issue-acc {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 20px 24px;
+  transition: border-color 0.2s, background 0.2s;
+    cursor: ;
+}
+.acc-issue-acc:hover {
+  background: var(--surface2);
+  border-color: rgba(0, 184, 148, 0.2);
+}
+
+/* Left accent line on hover */
+.acc-issue-acc {
+  border-left: 3px solid transparent;
+  transition: border-left-color 0.2s, border-color 0.2s, background 0.2s;
+}
+.acc-issue-acc:hover { border-left-color: var(--accent); }
+
+.acc-issue__header-acc {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+
+.acc-issue__impact-acc {
+  padding: 2px 10px;
+  border-radius: 4px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.62rem;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  flex-shrink: 0;
+}
+
+.acc-issue__rule-acc {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--text);
+}
+
+.acc-issue__wcag-acc {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.68rem;
+  color: var(--accent);
+  background: rgba(0, 184, 148, 0.08);
+  border: 1px solid rgba(0, 184, 148, 0.2);
+  border-radius: 4px;
+  padding: 2px 8px;
+}
+
+.acc-issue__priority-acc {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.72rem;
+  font-weight: 700;
+  margin-left: auto;
+}
+
+.acc-issue__category-acc {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.68rem;
+  color: var(--muted);
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 2px 8px;
+}
+
+.acc-issue__desc-acc {
+  font-size: 0.875rem;
+  color: var(--muted);
+  margin-bottom: 8px;
+  line-height: 1.65;
+  font-weight: 300;
+}
+
+.acc-issue__fix-acc {
+  font-size: 0.82rem;
+  color: var(--green);
+  line-height: 1.6;
+}
+.acc-issue__fix-label-acc {
+  font-weight: 700;
+}
+
+/* No issues state */
+.acc-no-issues-acc {
+  text-align: center;
+  padding: 64px;
+  background: var(--surface);
+  border: 1px solid rgba(34, 197, 94, 0.2);
+  border-radius: 16px;
+  color: var(--green);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 40px;
+}
+
+/* ============================================================
+   ACTION BUTTONS — mirrors btn-heroLP / btn-primaryLP
+   ============================================================ */
+.acc-actions-acc {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.acc-btn-acc {
+  height: 52px;
+  padding: 0 32px;
+  border: none;
+  border-radius: 8px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+    cursor: ;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.25s;
+}
+.acc-btn-acc:hover:not(:disabled) {
+  transform: translateY(-2px);
+}
+.acc-btn-acc:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* AI button — accent2 blue, mirrors accent2 usage */
+.acc-btn--ai-acc {
+  background: var(--accent2);
+  color: #fff;
+  box-shadow: 0 0 24px rgba(59, 130, 246, 0.25);
+}
+.acc-btn--ai-acc:hover:not(:disabled) {
+  box-shadow: 0 0 36px rgba(59, 130, 246, 0.45);
+}
+
+/* PDF button — primary accent green, mirrors btn-primaryLP */
+.acc-btn--pdf-acc {
+  background: var(--accent);
+  color: #fff;
+  box-shadow: 0 0 24px rgba(0, 184, 148, 0.25);
+}
+.acc-btn--pdf-acc:hover:not(:disabled) {
+  box-shadow: 0 0 36px rgba(0, 184, 148, 0.45);
+}
+
+/* ============================================================
+   SPINNER
+   ============================================================ */
+.spinner-acc {
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: acc-spin 0.7s linear infinite;
+  display: inline-block;
+  flex-shrink: 0;
+}
+@keyframes acc-spin { to { transform: rotate(360deg); } }
+
+/* ============================================================
+   ANIMATIONS — mirrors fadeUpLP
+   ============================================================ */
+@keyframes acc-fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ============================================================
+   RESPONSIVE — mirrors Home1.css breakpoints
+   ============================================================ */
+@media (max-width: 1024px) {
+  .acc-header__inner-acc  { padding: 0 24px; }
+  .acc-search-acc         { padding: 100px 24px 60px; }
+  .acc-results-acc        { padding: 32px 24px 60px; }
+  .acc-metrics-grid-acc   { grid-template-columns: repeat(2, 1fr); }
+  .acc-overview-acc       { flex-direction: column; gap: 28px; }
+  .acc-overview__stats-acc { justify-content: flex-start; }
+  .acc-issue__priority-acc { margin-left: 0; }
+}
+
+@media (max-width: 600px) {
+  .acc-search__form-acc     { flex-direction: column; border-radius: 10px; padding: 12px; gap: 10px; }
+  .acc-search__btn-acc      { justify-content: center; width: 100%; }
+  .acc-metrics-grid-acc     { grid-template-columns: 1fr; }
+  .acc-overview__stats-acc  { gap: 16px; }
+  .acc-overview__stats-acc .acc-stat-acc + .acc-stat-acc { border-left: none; padding-left: 0; }
+  .acc-actions-acc          { flex-direction: column; align-items: center; }
+  .acc-btn-acc              { width: 100%; justify-content: center; }
+  .acc-search-acc           { padding: 88px 16px 48px; }
+  .acc-results-acc          { padding: 20px 16px 48px; }
+}

@@ -1,0 +1,260 @@
+/* ============================================================
+   UserNav — Auth-aware nav component
+   Matches WebAuditX design system exactly
+   ============================================================ */
+
+/* ── Logged-out CTA ── */
+.unav-ctaWAX {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.unav-signinWAX {
+  color: var(--muted, #64748b);
+  font-size: 0.875rem;
+  font-weight: 500;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background: none;
+  border: 1px solid rgba(0,0,0,0.08);
+  border-radius: 6px;
+  padding: 8px 18px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.unav-signinWAX:hover {
+  color: #0f172a;
+  border-color: rgba(0,184,148,0.3);
+}
+
+.unav-startWAX {
+  background: #00b894;
+  color: #fff;
+  font-size: 0.875rem;
+  font-weight: 700;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  border: none;
+  border-radius: 6px;
+  padding: 9px 22px;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 0 20px rgba(0,184,148,0.25);
+}
+
+.unav-startWAX:hover {
+  box-shadow: 0 0 30px rgba(0,184,148,0.45);
+  transform: translateY(-1px);
+}
+
+/* ── Logged-in wrapper ── */
+.unav-wrapWAX {
+  position: relative;
+}
+
+/* ── Avatar trigger button ── */
+.unav-avatarBtnWAX {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #fff;
+  border: 1.5px solid rgba(0,0,0,0.08);
+  border-radius: 100px;
+  padding: 5px 12px 5px 5px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.unav-avatarBtnWAX:hover,
+.unav-avatarBtnWAX.openWAX {
+  border-color: rgba(0,184,148,0.4);
+  box-shadow: 0 0 0 3px rgba(0,184,148,0.08);
+}
+
+.unav-initialsWAX {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #00b894, #00cec9);
+  color: #fff;
+  font-size: 0.72rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  letter-spacing: 0.03em;
+}
+
+.unav-nameWAX {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #0f172a;
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.unav-chevronWAX {
+  font-size: 0.7rem;
+  color: #64748b;
+  transition: transform 0.2s;
+  line-height: 1;
+}
+
+.unav-chevronWAX.upWAX {
+  transform: rotate(180deg);
+}
+
+/* ── Dropdown ── */
+.unav-dropdownWAX {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  width: 260px;
+  background: #fff;
+  border: 1px solid rgba(0,0,0,0.08);
+  border-radius: 14px;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.12), 0 0 0 1px rgba(0,184,148,0.06);
+  z-index: 1000;
+  overflow: hidden;
+  animation: unavDropIn 0.18s cubic-bezier(0.34,1.56,0.64,1) both;
+}
+
+@keyframes unavDropIn {
+  from { opacity: 0; transform: translateY(-8px) scale(0.97); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* ── Header ── */
+.unav-drop-headerWAX {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 16px 12px;
+}
+
+.unav-drop-avatarWAX {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #00b894, #00cec9);
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 700;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.unav-drop-infoWAX {
+  min-width: 0;
+}
+
+.unav-drop-nameWAX {
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: #0f172a;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.unav-drop-emailWAX {
+  font-size: 0.75rem;
+  color: #64748b;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+/* ── Plan badge ── */
+.unav-planBadgeWAX {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin: 0 12px 10px;
+  padding: 7px 10px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  font-size: 0.78rem;
+  font-weight: 600;
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+.unav-planDotWAX {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.unav-upgradeChipWAX {
+  margin-left: auto;
+  background: none;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.68rem;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 2px 7px;
+  transition: all 0.15s;
+}
+
+.unav-upgradeChipWAX:hover {
+  opacity: 0.75;
+}
+
+/* ── Divider ── */
+.unav-dividerWAX {
+  height: 1px;
+  background: rgba(0,0,0,0.06);
+  margin: 4px 0;
+}
+
+/* ── Menu items ── */
+.unav-itemWAX {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  background: none;
+  border: none;
+  padding: 10px 16px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #0f172a;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.15s;
+}
+
+.unav-itemWAX:hover {
+  background: rgba(0,184,148,0.05);
+  color: #00b894;
+}
+
+.unav-item-iconWAX {
+  font-size: 1rem;
+  width: 18px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.unav-logoutWAX {
+  color: #ef4444;
+  padding-bottom: 12px;
+}
+
+.unav-logoutWAX:hover {
+  background: rgba(239,68,68,0.05);
+  color: #ef4444;
+}
